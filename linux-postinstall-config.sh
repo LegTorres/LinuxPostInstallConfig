@@ -11,7 +11,7 @@ else
     exit 1
 fi
 
-# Convirtiendo el nombre mostrado en el banner en mayusculas.
+# Convirtiendo el nombre mostrado en el banner a mayusculas.
 OS_NAME=$(echo "$OS" | tr '[:lower:]' '[:upper:]')
 echo -e "--------------------------------------------------\n| CONFIGURACION POST INSTALACION DE $OS_NAME LINUX |\n--------------------------------------------------\n"
 
@@ -91,6 +91,7 @@ flatpak install -y flathub com.brave.Browser
 echo -e "\n\nCONFIGURANDO GIT\nEstableciendo el nombre de la rama principal a main"
 git config --global init.defaultBranch main
 
+# Creando ciclo while que se ejecute mientras usuario y email esten vacios (-z "su longitud sea cero")
 read -p "Ingrese su nombre de USUARIO: " gitUser
 while [[ -z "$gitUser" ]]; do
     read -p "El usuario no puede estar vacío. Ingrese su USUARIO: " gitUser
