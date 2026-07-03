@@ -129,6 +129,7 @@ agregar_si_no_existe() {
 # Configuración para Bash
 agregar_si_no_existe "alias remoto='eval \$(ssh-agent -s) && ssh-add \$HOME/.ssh/id_ed25519'" "$HOME/.bashrc"
 agregar_si_no_existe "fastfetch" "$HOME/.bashrc"
+agregar_si_no_existe "alias cls='clear && fastfetch'"
 
 # Configuración para Zsh
 agregar_si_no_existe "alias remoto='eval \$(ssh-agent -s) && ssh-add \$HOME/.ssh/id_ed25519'" "$HOME/.zshrc"
