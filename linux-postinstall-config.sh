@@ -62,11 +62,37 @@ case "$OS" in
 
         # 2. INSTALANDO APLICACIONES DE USO GENERAL (APT)
         echo -e "\n\nINSTALANDO APLICACIONES NATIVAS (APT)\n\n"
-        sudo apt install -y zsh vim yt-dlp tilix audacity picard easytag calibre sigil strawberry brave-browser fastfetch btop htop papirus-icon-theme qt6ct qt5ct qt5-style-kvantum qt6-style-kvantum
+        sudo apt install -y zsh vim yt-dlp tilix audacity picard easytag calibre sigil strawberry brave-browser fastfetch btop htop papirus-icon-theme qt6ct qt5ct qt5-style-kvantum qt6-style-kvantum python3-pip python3-venv qt6-base-dev qt6-tools-dev
+
 
         # 3. INSTALANDO HERRAMIENTAS DE DESARROLLO (Equivalente en APT)
         echo -e "\n\nINSTALANDO HERRAMIENTAS DE DESARROLLO (APT)\n\n"
         sudo apt install -y build-essential
+        
+        # 1. Crea una carpeta para tus proyectos de Qt y entra en ella
+		mkdir -p ~/Proyectos/proyectos_qt && cd ~/Proyectos/proyectos_qt
+
+		# 2. Crea el entorno virtual llamado 'env'
+		python3 -m venv env
+
+		# 3. ACTIVA el entorno virtual (Debes hacer esto CADA VEZ que vayas a programar)
+		source env/bin/activate
+		
+		pip install PySide6
+		pip install -U pyinstaller
+		
+		cat << 'EOF' > ~/.local/share/applications/designer.desktop
+		[Desktop Entry]
+		Version=1.0
+		Name=Qt Designer 6
+		Comment=Diseñador Visual de Interfaces Qt6
+		Exec=/usr/lib/qt6/bin/designer
+		Icon=/home/edgar/.local/share/icons/qt-designer.png
+		Terminal=false
+		Type=Application
+		Categories=Development;GUIDesigner;
+		EOF
+
         ;;
 
     *)
@@ -129,7 +155,8 @@ agregar_si_no_existe() {
 # Configuración para Bash
 agregar_si_no_existe "alias remoto='eval \$(ssh-agent -s) && ssh-add \$HOME/.ssh/id_ed25519'" "$HOME/.bashrc"
 agregar_si_no_existe "fastfetch" "$HOME/.bashrc"
-agregar_si_no_existe "alias cls='clear && fastfetch'"
+agregar_si_no_existe "alias cls='clear && fastfetch'" "$HOME/.bashrc"
+agregar_si_no_existe "alias activa_qt='cd ~/Proyectos/proyectos_qt && source env/bin/activate'" "$HOME/.bashrc" 
 
 # Configuración para Zsh
 agregar_si_no_existe "alias remoto='eval \$(ssh-agent -s) && ssh-add \$HOME/.ssh/id_ed25519'" "$HOME/.zshrc"
