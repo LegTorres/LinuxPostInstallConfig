@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# ==============================================================================
-# 1. IDENTIFICACIÓN DEL SISTEMA OPERATIVO
-# ==============================================================================
+echo "     IDENTIFICANDO EL SISTEMA OPERATIVO"
+
 if [ -f /etc/os-release ]; then
     source /etc/os-release
     OS=$ID
@@ -13,8 +12,71 @@ fi
 
 # Convirtiendo el nombre mostrado en el banner a mayusculas.
 OS_NAME=$(echo "$OS" | tr '[:lower:]' '[:upper:]')
-echo -e "--------------------------------------------------\n| CONFIGURACION POST INSTALACION DE $OS_NAME LINUX |\n--------------------------------------------------\n"
 
+echo "CONFIGURACION POST INSTALACION DE $OS_NAME LINUX"
+
+
+
+
+
+case "$OS_NAME" in
+	ubuntu|debian|linuxmint|pop|zorin)
+	
+	;;
+	
+	fedora)
+	
+	;;
+	arch|manjaro|cachyos)
+	
+	;;
+	
+
+
+
+
+
+# Mostrar el menú en pantalla
+echo "========================================="
+echo "             MENÚ DE OPCIONES            "
+echo "========================================="
+echo "1) Actualizar sistema"
+echo "2) Limpiar caché"
+echo "3) Ver espacio en disco"
+echo "4) Salir"
+echo "========================================="
+echo "Introduce los números separados por espacios (ej: 1 3):"
+
+# Leer la entrada del usuario en una variable
+read -r selecciones
+
+# Procesar cada número introducido
+for seleccion in $selecciones; do
+    case "$seleccion" in
+        1)
+            echo -e "\n[*] Ejecutando: Actualizar sistema..."
+            # Tu comando aquí
+            ;;
+        2)
+            echo -e "\n[*] Ejecutando: Limpiar caché..."
+            # Tu comando aquí
+            ;;
+        3)
+            echo -e "\n[*] Ejecutando: Ver espacio en disco..."
+            df -h
+            ;;
+        4)
+            echo -e "\n[*] Ejecutando: Reiniciar servicios..."
+            # Tu comando aquí
+            exit 0
+            ;;
+        *)
+            echo -e "\n[!] Opción '$seleccion' no es válida. Saltando..."
+            ;;
+    esac
+done
+
+echo -e "\n¡Proceso finalizado!"
 # ==============================================================================
 # 2. INSTALACIÓN DE REPOSITORIOS Y PAQUETES SEGÚN LA DISTRIBUCIÓN
 # ==============================================================================
