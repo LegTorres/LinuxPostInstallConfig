@@ -10,6 +10,16 @@ else
     exit 1
 fi
 
+# Guardar el nombre del usuario real que ejecuta el script
+REAL_USER=${SUDO_USER:-$USER}
+
+# Si el script se ejecutó directamente con sudo, detenerlo por seguridad
+if [ "$EUID" -eq 0 ]; then
+    echo -e "\n\033[1;31mError: No ejecutes este script como ROOT directo (su o sudo ./script.sh).\033[0m"
+    echo "Ejecútalo como usuario normal: ./script.sh"
+    exit 1
+fi
+
 echo "CONFIGURACION POST INSTALACION DE $(echo $OS | tr '[:lower:]' '[:upper:]') LINUX"
 
 
@@ -26,6 +36,7 @@ APPS_UNIVERSALES=(
 	curl
 	wget
 	tilix
+	geany
 	audacity
 	picard
 	easytag
@@ -33,21 +44,41 @@ APPS_UNIVERSALES=(
 	sigil
 	gimp
 	inkscape
-	strawberry
-	fastfetch
 	papirus-icon-theme
+	strawberry
 )
 
 APPS_UBUNTU=(
+	python3-pip
+	python3-venv
 	build-essential
+	qt6-base-dev
+	qt6-tools-dev
 )
 
 APPS_FEDORA=(
-
+	python3-pip
+	fastfetch
+	qt6-base-devel
+	qt6-tools-devel
 )
 
 APPS_ARCH=(
+	python-pip
+	qt6-base
+	qt6-tools
+	fastfetch
+)
 
+APPS_FLATPAK=(
+	com.usehandbrake.HandBrake
+	org.onlyoffice.desktopeditors
+	com.brave.Browser
+	com.yacreader.YACReader
+)
+
+APPS_SNAP=(
+	fastfetch
 )
 
 
@@ -62,7 +93,7 @@ instalar_flatpak(){
 		if [ "$1" != "pacman" ]; then
 			sudo $1 install -y flatpak
 		else
-			sudo $1 -S flatpak
+			sudo $1 -S --noconfirm flatpak
 		fi
 	fi
 	flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -124,6 +155,7 @@ case "$OS" in
 		echo -e "Instalando las aplicaiones."
 		sudo apt install -y "${APPS_UNIVERSALES[@]}" "${APPS_UBUNTU[@]}"
 		instalar_flatpak apt
+		sudo snap install "${APPS_SNAP[@]}"
 		;;
 	
 	fedora)
@@ -151,16 +183,27 @@ case "$OS" in
 	
 esac
 
-echo -e "\n\nINSTALANDO APLICACIONES MULTIMEDIA (FLATPAK)\n\n"
-flatpak install -y flathub com.usehandbrake.HandBrake
-flatpak install -y flathub org.onlyoffice.desktopeditors
-flatpak install -y flathub com.brave.Browser
-flatpak install -y flathub com.yacreader.YACReader
+mkdir -p ~/Proyectos/proyectos_qt
+cd ~/Proyectos/proyectos_qt/
+python3 -m venv env
+source env/bin/activate
+pip install PySide6 pyinstaller -U
+deactivate
+cd ~
+
+echo -e "\n\nINSTALANDO APLICACIONES FLATPAK\n\n"
+for app in "${APPS_FLATPAK[@]}"; do
+	flatpak install --user -y flathub "$app" || echo "Advertencia: No se pudo instalar $app, continuando..."
+done
 
 configurar_git
 
+echo -e "\n\nCONFIGURANDO ARCHIVO '.vimrc'\n\n"
+echo -e "set number\nsyntax on\nset ts=4\nset background=dark\nset autoindent" >> ~/.vimrc
+
 agregar_a_archivo "fastfetch" "$HOME/.bashrc"
 agregar_a_archivo "alias cls='clear && fastfetch'" "$HOME/.bashrc"
-
+agregar_a_archivo "alias activar_qt='cd ~/Proyectos/proyectos_qt && source env/bin/activate'" "$HOME/.bashrc"
+agregar_a_archivo "alias designer='activar_qt && pyside6-designer'" "$HOME/.bashrc"
 
 echo -e "\n\nListo, configuracion terminada!!!\n"
