@@ -61,9 +61,9 @@ APPS_UBUNTU=(
 APPS_FEDORA=(
 	python3-pip
 	qt6-designer
-	fastfetch
 	qt6-base-devel
 	qt6-tools-devel
+	fastfetch
 	yt-dlp
 )
 
