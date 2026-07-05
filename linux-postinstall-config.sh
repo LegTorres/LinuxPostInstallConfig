@@ -46,28 +46,35 @@ APPS_UNIVERSALES=(
 	inkscape
 	papirus-icon-theme
 	strawberry
+	qt-creator
+
 )
 
 APPS_UBUNTU=(
 	python3-pip
 	python3-venv
-	build-essential
+	qt6-tools-dev 
 	qt6-base-dev
-	qt6-tools-dev
+	build-essential
 )
 
 APPS_FEDORA=(
 	python3-pip
+	qt6-designer
 	fastfetch
 	qt6-base-devel
 	qt6-tools-devel
+	yt-dlp
 )
 
 APPS_ARCH=(
+	base-devel
+	cmake
 	python-pip
 	qt6-base
 	qt6-tools
 	fastfetch
+	yt-dlp
 )
 
 APPS_FLATPAK=(
@@ -79,6 +86,7 @@ APPS_FLATPAK=(
 
 APPS_SNAP=(
 	fastfetch
+	yt-dlp
 )
 
 
@@ -187,6 +195,7 @@ mkdir -p ~/Proyectos/proyectos_qt
 cd ~/Proyectos/proyectos_qt/
 python3 -m venv env
 source env/bin/activate
+pip install --upgrade pip
 pip install PySide6 pyinstaller -U
 deactivate
 cd ~
