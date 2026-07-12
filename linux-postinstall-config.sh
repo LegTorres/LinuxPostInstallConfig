@@ -108,6 +108,49 @@ instalar_flatpak(){
 }
 
 
+instalar_por_entorno() {
+    # 1. Detectar el entorno de escritorio y convertirlo a minúsculas
+    local desktop=$(echo "${XDG_CURRENT_DESKTOP:-Desconocido}" | tr '[:upper:]' '[:lower:]')
+    
+    # 2. Detectar el gestor de paquetes disponible en el sistema
+    local install_cmd=""
+    if command -v apt &> /dev/null; then
+        install_cmd="sudo apt install -y"
+    elif command -v pacman &> /dev/null; then
+        install_cmd="sudo pacman -S --noconfirm"
+    elif command -v dnf &> /dev/null; then
+        install_cmd="sudo dnf install -y"
+    else
+        echo "Error: No se encontró un gestor de paquetes compatible (APT, Pacman, DNF)."
+        return 1
+    fi
+
+    echo "Entorno detectado: $XDG_CURRENT_DESKTOP"
+
+    # 3. Evaluar el entorno e instalar las herramientas específicas
+    case "$desktop" in
+        *gnome*)
+            echo "Configurando herramientas para GNOME..."
+            $install_cmd gnome-tweaks gnome-shell-extension-manager
+            ;;
+        *kde*)
+            echo "Configurando herramientas para KDE Plasma..."
+            $install_cmd kde-spectacle plasma-widgets-addons
+            ;;
+        *xfce*)
+            echo "Configurando herramientas para XFCE..."
+            $install_cmd xfce4-goodies xfce4-whiskermenu-plugin
+            ;;
+		*cinnamon*)
+			$install_cmd cinnamon-spices-updater plank
+			;;
+        *)
+            echo "El entorno '$XDG_CURRENT_DESKTOP' no requiere aplicaciones específicas."
+            ;;
+    esac
+}
+
+
 agregar_a_archivo(){
 	local linea="$1"
     local archivo="$2"
@@ -204,6 +247,8 @@ echo -e "\n\nINSTALANDO APLICACIONES FLATPAK\n\n"
 for app in "${APPS_FLATPAK[@]}"; do
 	flatpak install --user -y flathub "$app" || echo "Advertencia: No se pudo instalar $app, continuando..."
 done
+
+instalar_por_entorno
 
 configurar_git
 
