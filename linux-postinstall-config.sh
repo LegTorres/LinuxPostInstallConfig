@@ -46,6 +46,8 @@ APPS_UNIVERSALES=(
 	inkscape
 	papirus-icon-theme
 	strawberry
+	mangohud
+	goverlay
 	qt-creator
 
 )
@@ -78,7 +80,7 @@ APPS_ARCH=(
 )
 
 APPS_FLATPAK=(
-	com.usehandbrake.HandBrake
+	fr.handbrake.ghb
 	org.onlyoffice.desktopeditors
 	com.brave.Browser
 	com.yacreader.YACReader
