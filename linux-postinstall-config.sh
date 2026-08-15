@@ -48,6 +48,7 @@ APPS_UNIVERSALES=(
 	strawberry
 	mangohud
 	goverlay
+	flatseal
 	qt-creator
 
 )
